@@ -1,47 +1,106 @@
-# Svelte + TS + Vite
+# IA-PC
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+Chat para hablar con la IA que funciona en el computador de tu casa. La página se publica
+en Vercel, pero las preguntas y respuestas viajan directo entre tu dispositivo y tu PC:
+la IA corre en su procesador y las conversaciones se guardan en su disco.
 
-## Recommended IDE Setup
+Hecho con Svelte 5, TypeScript y Vite.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## Qué hace
 
-## Need an official Svelte framework?
+- Entrar con la contraseña del servidor (la sesión dura 30 días en cada dispositivo).
+- Ver si tu PC está encendido y disponible.
+- Respuestas en vivo, palabra por palabra, con formato (listas, tablas, código).
+- Modo "Razonar antes de responder" y elección de modelo.
+- Detener una respuesta a la mitad (lo escrito hasta ese momento se guarda).
+- Historial de conversaciones guardado en tu PC, disponible desde cualquier dispositivo.
+- Modo claro y oscuro automático, pensado también para celular.
+- Se puede instalar en el celular como una app.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## Probar en tu computador
 
-## Technical considerations
+Necesitas Node.js 22 o superior.
 
-**Why use this over SvelteKit?**
+```bash
+npm install
+npm run dev
+```
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+Abre <http://localhost:3000>. Se usa el puerto 3000 porque el servidor de IA ya acepta
+conexiones desde esa dirección.
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+Por defecto la página se conecta a `https://servidor-ia.tail9885b3.ts.net`. Para usar otra
+dirección, copia `.env.example` como `.env.local` y cámbiala ahí.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+## Publicar en Vercel
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+1. Sube los cambios a GitHub:
+   ```bash
+   git add -A
+   git commit -m "Chat básico"
+   git push
+   ```
+2. En [vercel.com](https://vercel.com), elige **Add New → Project**, importa el repositorio
+   y presiona **Deploy**. Vercel detecta Vite solo; no hay que configurar nada.
+3. Si algún día cambia la dirección del servidor, agrégala en
+   **Settings → Environment Variables** como `VITE_SERVIDOR_URL` y vuelve a publicar.
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+Cada `git push` publica una versión nueva automáticamente.
 
-**Why include `.vscode/extensions.json`?**
+## Después de publicar: cerrar el servidor a otras páginas
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+Hoy el servidor acepta conexiones de cualquier página `*.vercel.app` (igual pide
+contraseña). Cuando tengas la dirección exacta de tu página, en el PC servidor:
 
-**Why enable `allowJs` in the TS template?**
+```bash
+sudo nano /etc/ia-servidor/config.env
+```
 
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+Cambia la línea `IA_ORIGENES` por tu dirección, dejando también la de pruebas locales:
 
-**Why is HMR not preserving my local component state?**
+```
+IA_ORIGENES="https://tu-pagina.vercel.app,http://localhost:3000"
+```
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
+Guarda con Ctrl+O, Enter, Ctrl+X, y reinicia el backend:
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+```bash
+sudo systemctl restart ia-servidor
+```
 
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+## Instalar en el celular
+
+- **Android (Chrome):** abre la página, toca el menú ⋮ y elige **Instalar app** o
+  **Agregar a la pantalla principal**.
+- **iPhone (Safari):** toca el botón de compartir y elige **Agregar a inicio**.
+
+## Comandos
+
+| Comando | Para qué |
+|---|---|
+| `npm run dev` | Probar la página en tu computador |
+| `npm run check` | Revisar errores de TypeScript y Svelte |
+| `npm run build` | Compilar la versión final (lo hace Vercel al publicar) |
+| `npm run preview` | Ver la versión compilada en tu computador |
+
+## Archivos principales
+
+```
+src/
+  App.svelte                    decide si mostrar la entrada o el chat
+  app.css                       colores, letras y espacios
+  lib/
+    api.ts                      comunicación con el PC servidor
+    estado.svelte.ts            estado del chat y sus acciones
+    markdown.ts                 formato seguro de las respuestas
+    tipos.ts                    forma de los datos del servidor
+    componentes/
+      Entrada.svelte            pantalla de contraseña
+      BarraLateral.svelte       lista de conversaciones
+      Chat.svelte               mensajes y encabezado
+      MensajeVista.svelte       un mensaje tuyo o de la IA
+      Compositor.svelte         caja para escribir
+      EstadoPC.svelte           indicador del estado del PC
+      Icono.svelte              íconos
+public/                         ícono y datos para instalarla como app
 ```

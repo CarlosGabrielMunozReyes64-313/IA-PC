@@ -1,89 +1,71 @@
-<script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from './assets/vite.svg'
-  import heroImg from './assets/hero.png'
-  import Counter from './lib/Counter.svelte'
+<script lang="ts">
+  import { onMount } from 'svelte'
+  import { estado } from './lib/estado.svelte'
+  import BarraLateral from './lib/componentes/BarraLateral.svelte'
+  import Chat from './lib/componentes/Chat.svelte'
+  import Entrada from './lib/componentes/Entrada.svelte'
+
+  let listaAbierta = $state(false)
+
+  onMount(() => {
+    void estado.comprobarPC()
+    if (estado.token) void estado.cargarInicio()
+
+    // Revisar cada 30 segundos si el PC sigue disponible (solo con la pestaña visible)
+    const intervalo = setInterval(() => {
+      if (document.visibilityState === 'visible' && !estado.generando) void estado.comprobarPC()
+    }, 30_000)
+    const alVolver = () => {
+      if (document.visibilityState === 'visible') void estado.comprobarPC()
+    }
+    document.addEventListener('visibilitychange', alVolver)
+    return () => {
+      clearInterval(intervalo)
+      document.removeEventListener('visibilitychange', alVolver)
+    }
+  })
+
+  function alTeclear(e: KeyboardEvent) {
+    if (e.key === 'Escape' && listaAbierta) listaAbierta = false
+  }
 </script>
 
-<section id="center">
-  <div class="hero">
-    <img src={heroImg} class="base" width="170" height="179" alt="" />
-    <img src={svelteLogo} class="framework" alt="Svelte logo" />
-    <img src={viteLogo} class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/App.svelte</code> and save to test <code>HMR</code></p>
-  </div>
-  <Counter />
-</section>
+<svelte:window onkeydown={alTeclear} />
 
-<div class="ticks"></div>
-
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true">
-      <use href="/icons.svg#documentation-icon"></use>
-    </svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank" rel="noreferrer">
-          <img class="logo" src={viteLogo} alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://svelte.dev/" target="_blank" rel="noreferrer">
-          <img class="button-icon" src={svelteLogo} alt="" />
-          Learn more
-        </a>
-      </li>
-    </ul>
+{#if estado.token}
+  <div class="aplicacion">
+    <BarraLateral abierta={listaAbierta} onCerrar={() => (listaAbierta = false)} />
+    {#if listaAbierta}
+      <button class="velo" onclick={() => (listaAbierta = false)} aria-label="Cerrar la lista" tabindex="-1"></button>
+    {/if}
+    <Chat onAbrirLista={() => (listaAbierta = true)} />
   </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true">
-      <use href="/icons.svg#social-icon"></use>
-    </svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li>
-        <a href="https://github.com/vitejs/vite" target="_blank" rel="noreferrer">
-          <svg class="button-icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#github-icon"></use>
-          </svg>
-          GitHub
-        </a>
-      </li>
-      <li>
-        <a href="https://chat.vite.dev/" target="_blank" rel="noreferrer">
-          <svg class="button-icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#discord-icon"></use>
-          </svg>
-          Discord
-        </a>
-      </li>
-      <li>
-        <a href="https://x.com/vite_js" target="_blank" rel="noreferrer">
-          <svg class="button-icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#x-icon"></use>
-          </svg>
-          X.com
-        </a>
-      </li>
-      <li>
-        <a href="https://bsky.app/profile/vite.dev" target="_blank" rel="noreferrer">
-          <svg class="button-icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#bluesky-icon"></use>
-          </svg>
-          Bluesky
-        </a>
-      </li>
-    </ul>
-  </div>
-</section>
+{:else}
+  <Entrada />
+{/if}
 
-<div class="ticks"></div>
-<section id="spacer"></section>
+<style>
+  .aplicacion {
+    display: grid;
+    grid-template-columns: 17rem 1fr;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .velo {
+    display: none;
+  }
+  @media (max-width: 760px) {
+    .aplicacion {
+      grid-template-columns: 1fr;
+    }
+    .velo {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      border: none;
+      background: var(--velo);
+      cursor: default;
+    }
+  }
+</style>
