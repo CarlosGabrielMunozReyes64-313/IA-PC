@@ -1,7 +1,7 @@
 {
-  "name": "IA-PC",
-  "short_name": "IA-PC",
-  "description": "Chat con la IA que funciona en el computador de tu casa.",
+  "name": "Aya",
+  "short_name": "Aya",
+  "description": "Chat con Aya, la IA que funciona en el computador de tu casa.",
   "lang": "es",
   "start_url": "/",
   "scope": "/",

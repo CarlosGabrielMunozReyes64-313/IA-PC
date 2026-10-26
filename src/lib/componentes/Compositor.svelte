@@ -35,7 +35,7 @@
 
 <div class="compositor">
   <div class="caja" class:activa={estado.generando}>
-    <label class="oculto" for="pregunta">Pregunta para la IA</label>
+    <label class="oculto" for="pregunta">Pregunta para Aya</label>
     <textarea
       id="pregunta"
       bind:this={caja}

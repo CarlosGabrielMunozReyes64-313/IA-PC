@@ -10,7 +10,7 @@
     switch (estado.pc) {
       case 'comprobando': return 'Buscando tu PC…'
       case 'en-linea': return 'Tu PC está en línea'
-      case 'sin-ia': return 'Tu PC está encendido, pero la IA no responde'
+      case 'sin-ia': return 'Tu PC está encendido, pero Aya no responde'
       case 'sin-conexion': return 'No encuentro tu PC'
     }
   })

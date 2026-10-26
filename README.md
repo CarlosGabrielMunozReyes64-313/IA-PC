@@ -1,8 +1,8 @@
-# IA-PC
+# Aya
 
-Chat para hablar con la IA que funciona en el computador de tu casa. La página se publica
-en Vercel, pero las preguntas y respuestas viajan directo entre tu dispositivo y tu PC:
-la IA corre en su procesador y las conversaciones se guardan en su disco.
+Chat para hablar con Aya, la IA que funciona en el computador de tu casa. La página se
+publica en Vercel, pero las preguntas y respuestas viajan directo entre tu dispositivo y tu PC:
+Aya corre en su procesador y las conversaciones se guardan en su disco.
 
 Hecho con Svelte 5, TypeScript y Vite.
 
@@ -37,7 +37,7 @@ dirección, copia `.env.example` como `.env.local` y cámbiala ahí.
 1. Sube los cambios a GitHub:
    ```bash
    git add -A
-   git commit -m "Chat básico"
+   git commit -m "Aya"
    git push
    ```
 2. En [vercel.com](https://vercel.com), elige **Add New → Project**, importa el repositorio
@@ -98,7 +98,7 @@ src/
       Entrada.svelte            pantalla de contraseña
       BarraLateral.svelte       lista de conversaciones
       Chat.svelte               mensajes y encabezado
-      MensajeVista.svelte       un mensaje tuyo o de la IA
+      MensajeVista.svelte       un mensaje tuyo o de Aya
       Compositor.svelte         caja para escribir
       EstadoPC.svelte           indicador del estado del PC
       Icono.svelte              íconos

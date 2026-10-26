@@ -17,7 +17,7 @@
 
 <main class="entrada">
   <div class="columna">
-    <h1 class="marca">IA-PC<span class="cursor" aria-hidden="true"></span></h1>
+    <h1 class="marca">Aya<span class="cursor" aria-hidden="true"></span></h1>
     <p class="lema">La IA que funciona en el computador de tu casa.</p>
 
     <EstadoPC />

@@ -1,6 +1,6 @@
-/* Colores, letras y espacios de IA-PC.
+/* Colores, letras y espacios de Aya.
    Mismo idioma de colores que el panel de la terminal del servidor:
-   ámbar = lo que escribes tú, verde = la IA, morado = su razonamiento. */
+   ámbar = lo que escribes tú, verde = Aya, morado = su razonamiento. */
 
 :root {
   --papel: #eef1f3;

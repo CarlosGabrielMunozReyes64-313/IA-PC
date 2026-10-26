@@ -33,7 +33,7 @@
 
 <aside class="barra" class:abierta aria-label="Conversaciones">
   <div class="cabecera">
-    <span class="marca">IA-PC</span>
+    <span class="marca">Aya</span>
     <button class="icono solo-movil" onclick={onCerrar} aria-label="Cerrar la lista">
       <Icono nombre="cerrar" />
     </button>

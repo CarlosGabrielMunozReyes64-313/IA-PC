@@ -1,4 +1,4 @@
-// Convierte el Markdown que escribe la IA (listas, negritas, código, tablas...) en HTML.
+// Convierte el Markdown que escribe Aya (listas, negritas, código, tablas...) en HTML.
 // Es seguro: todo el texto se escapa antes de agregar etiquetas, así que la respuesta
 // nunca puede inyectar HTML ni scripts en la página. Funciona también con texto a medias
 // mientras la respuesta todavía se está generando.
